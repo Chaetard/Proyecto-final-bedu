@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <style></style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="titulo-seccion">Crear una nueva tarea</h1>
+          <form th:object="${tarea}" th:action="@{/guardar}" method="post">
+            <div class="">
+              <label for="productName" class="form-label">Nombre</label>
+              <input
+                type="text"
+                class="form-control"
+                th:field="*{nombre}"
+                required
+              />
+            </div>
+            <div class="">
+              <label for="productUrl" class="form-label">Descripción</label>
+              <input
+                type="text"
+                class="form-control"
+                th:field="*{descripcion}"
+                required
+              />
+            </div>
+            <input type="hidden" th:field="*{estado}" value="pendiente" />
+            <button type="submit" class="btn btn-primary">Enviar</button>
+          </form>
+        </div>
+        <div class="col-4 pendiente">
+          <h1 class="titulo-seccion">Tareas Pendientes</h1>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Acciones</th>
+                <th scope="col">Mover</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="t : ${tareas}" th:if="${t.estado == 'pendiente'}">
+                <td th:text="${t.nombre}"></td>
+                <td th:text="${t.descripcion}"></td>
+                <td>
+                  <a th:href="@{'/editar/' + ${t.id}}" class="btn btn-success"
+                    >Editar</a
+                  >
+                  <form th:action="@{/eliminar}" method="post">
+                    <input type="hidden" name="id" th:value="${t.id}" />
+                    <button type="submit" class="btn btn-danger">
+                      Eliminar
+                    </button>
+                  </form>
+                </td>
+                <td>
+
+                  <form th:action="@{/moverProceso}" method="post">
+                    <input type="hidden" name="id" th:value="${t.id}" />
+                    <button type="submit" class="btn btn-danger">
+                      ->
+                    </button>
+                  </form>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4 proceso">
+          <h1 class="titulo-seccion">Tareas en Proceso</h1>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Acciones</th>
+                <th scope="col">Mover</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="t : ${tareas}" th:if="${t.estado == 'proceso'}">
+                <td th:text="${t.nombre}"></td>
+                <td th:text="${t.descripcion}"></td>
+                <td>
+                  <a th:href="@{'/editar/' + ${t.id}}" class="btn btn-success"
+                    >Editar</a
+                  >
+
+                  <form th:action="@{/eliminar}" method="post">
+                    <input type="hidden" name="id" th:value="${t.id}" />
+                    <button type="submit" class="btn btn-danger">
+                      Eliminar
+                    </button>
+                  </form>
+                </td>
+                <td>
+
+                  <form th:action="@{/moverTerminada}" method="post">
+                    <input type="hidden" name="id" th:value="${t.id}" />
+                    <button type="submit" class="btn btn-danger">
+                      ->
+                    </button>
+                  </form>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4 terminada">
+          <h1 class="titulo-seccion">Tareas Terminadas</h1>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="t : ${tareas}" th:if="${t.estado == 'terminada'}">
+                <td th:text="${t.nombre}"></td>
+                <td th:text="${t.descripcion}"></td>
+                <td>
+                  <form th:action="@{/eliminar}" method="post">
+                    <input type="hidden" name="id" th:value="${t.id}" />
+                    <button type="submit" class="btn btn-danger">
+                      Eliminar
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
